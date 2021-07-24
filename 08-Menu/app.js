@@ -72,3 +72,62 @@ const menu = [
     desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
   },
 ];
+// creating buttons dynamically so that addition of data is reflected in the project
+
+const btnContainer = document.querySelector(".btn-container");
+const sectionCenter = document.querySelector(".section-center");
+
+function displayButtons() {
+  const listCat = menu.reduce(
+    function(values, item) {
+      if (!values.includes(item.category)) {
+        values.push(item.category);
+      }
+      return values;
+    },
+    ["all"]
+  );
+  let butns = listCat.map(function(cat) {
+    return `<button class='filter-btn' type='button' data-id= '${cat}'>${cat}</button>`;
+  });
+  butns = butns.join("");
+  btnContainer.innerHTML = butns;
+  const btns = document.querySelectorAll(".filter-btn");
+  btns.forEach(function(btn) {
+    btn.addEventListener("click", function(e) {
+      const cat = e.currentTarget.dataset.id;
+      const newMenu = menu.filter(function(item) {
+        if (item.category === cat) {
+          return item;
+        }
+      });
+      if (cat === "all") {
+        displayMenuItems(menu);
+      } else {
+        displayMenuItems(newMenu);
+      }
+    });
+  });
+}
+
+window.addEventListener("DOMContentLoaded", function() {
+  displayMenuItems(menu);
+  displayButtons();
+});
+
+function displayMenuItems(menuItems) {
+  let displayMenu = menuItems.map(function(item) {
+    return `<article class="menu-item">
+          <img src=${item.img} class="photo" alt="${item.title}" />
+          <div class="item-info">
+            <header>
+              <h4>${item.title}</h4>
+              <h4 class="price">$${item.price}</h4>
+            </header>
+            <p class="item-text">${item.desc}</p>
+          </div>
+        </article>`;
+  });
+  displayMenu = displayMenu.join("");
+  sectionCenter.innerHTML = displayMenu;
+}
